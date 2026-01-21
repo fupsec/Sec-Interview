@@ -93,15 +93,44 @@
             border-color: var(--accent-primary);
             box-shadow: var(--shadow-glow);
         }
-        .question-title {
-            font-size: 1.25rem;
-            font-weight: 600;
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             margin-bottom: 1rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        .question-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
             color: var(--accent-primary);
+            padding: 0.25rem 0.75rem;
+            background: rgba(0, 255, 157, 0.1);
+            border-radius: 4px;
+        }
+        .question-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            flex: 1;
+        }
+        .question-toggle {
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+            transition: transform 0.3s ease;
+        }
+        .question-card.expanded .question-toggle {
+            transform: rotate(180deg);
         }
         .question-content {
+            display: none;
             color: var(--text-primary);
             line-height: 1.8;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .question-card.expanded .question-content {
+            display: block;
         }
         .question-content pre {
             background: var(--bg-secondary);
@@ -159,37 +188,37 @@
     </main>
     <script>
         const chapters = {
-            1: { title: '信息收集', path: 'Chapter1' },
-            2: { title: 'XSS 跨站脚本', path: 'Chapter2' },
-            3: { title: 'CSRF 跨站请求伪造', path: 'Chapter3' },
-            4: { title: 'SQL 注入', path: 'Chapter4' },
-            5: { title: '文件上传漏洞', path: 'Chapter5' },
-            6: { title: '文件包含漏洞', path: 'Chapter6' },
-            7: { title: 'SSRF 服务端请求伪造', path: 'Chapter7' },
-            8: { title: 'XXE 外部实体注入', path: 'Chapter8' },
-            9: { title: '命令执行', path: 'Chapter9' },
-            10: { title: '权限维持', path: 'Chapter10' },
-            11: { title: '横向移动', path: 'Chapter11' },
-            12: { title: '权限提升', path: 'Chapter12' },
-            13: { title: '内网渗透', path: 'Chapter13' },
-            14: { title: '提权实战', path: 'Chapter14' },
-            15: { title: '后渗透', path: 'Chapter15' },
-            16: { title: '免杀技术', path: 'Chapter16' },
-            17: { title: 'Webshell', path: 'Chapter17' },
-            18: { title: '应急响应', path: 'Chapter18' },
-            19: { title: 'APT 攻击', path: 'Chapter19' },
-            20: { title: '数据恢复', path: 'Chapter20' },
-            21: { title: '社会工程学', path: 'Chapter21' },
-            22: { title: '流量分析', path: 'Chapter22' },
-            23: { title: '逆向工程', path: 'Chapter23' },
-            24: { title: '痕迹清除', path: 'Chapter24' },
-            25: { title: '钓鱼社工', path: 'Chapter25' },
-            26: { title: '二进制', path: 'Chapter26' },
-            27: { title: 'AI 安全', path: 'Chapter27' },
-            28: { title: '密码学安全', path: 'Chapter28' },
-            29: { title: '区块链安全', path: 'Chapter29' },
-            30: { title: '云安全', path: 'Chapter30' },
-            31: { title: 'APP 安全', path: 'Chapter31' }
+            1: { title: '信息收集', path: 'Chapter1', count: 32 },
+            2: { title: 'XSS 跨站脚本', path: 'Chapter2', count: 13 },
+            3: { title: 'CSRF 跨站请求伪造', path: 'Chapter3', count: 3 },
+            4: { title: 'SQL 注入', path: 'Chapter4', count: 20 },
+            5: { title: '文件上传漏洞', path: 'Chapter5', count: 14 },
+            6: { title: '文件包含漏洞', path: 'Chapter6', count: 8 },
+            7: { title: 'SSRF 服务端请求伪造', path: 'Chapter7', count: 12 },
+            8: { title: 'XXE 外部实体注入', path: 'Chapter8', count: 8 },
+            9: { title: '命令执行', path: 'Chapter9', count: 12 },
+            10: { title: '权限维持', path: 'Chapter10', count: 11 },
+            11: { title: '横向移动', path: 'Chapter11', count: 13 },
+            12: { title: '权限提升', path: 'Chapter12', count: 13 },
+            13: { title: '内网渗透', path: 'Chapter13', count: 15 },
+            14: { title: '提权实战', path: 'Chapter14', count: 13 },
+            15: { title: '后渗透', path: 'Chapter15', count: 13 },
+            16: { title: '免杀技术', path: 'Chapter16', count: 12 },
+            17: { title: 'Webshell', path: 'Chapter17', count: 13 },
+            18: { title: '应急响应', path: 'Chapter18', count: 13 },
+            19: { title: 'APT 攻击', path: 'Chapter19', count: 10 },
+            20: { title: '数据恢复', path: 'Chapter20', count: 10 },
+            21: { title: '社会工程学', path: 'Chapter21', count: 9 },
+            22: { title: '流量分析', path: 'Chapter22', count: 10 },
+            23: { title: '逆向工程', path: 'Chapter23', count: 24 },
+            24: { title: '痕迹清除', path: 'Chapter24', count: 2 },
+            25: { title: '钓鱼社工', path: 'Chapter25', count: 3 },
+            26: { title: '二进制', path: 'Chapter26', count: 19 },
+            27: { title: 'AI 安全', path: 'Chapter27', count: 11 },
+            28: { title: '密码学安全', path: 'Chapter28', count: 6 },
+            29: { title: '区块链安全', path: 'Chapter29', count: 8 },
+            30: { title: '云安全', path: 'Chapter30', count: 1 },
+            31: { title: 'APP 安全', path: 'Chapter31', count: 2 }
         };
 
         async function loadChapter() {
@@ -204,26 +233,69 @@
 
             const chapter = chapters[chapterId];
             document.getElementById('chapterTitle').textContent = `Chapter ${chapterId}: ${chapter.title}`;
+            
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = '';
 
-            try {
-                const response = await fetch(`${chapter.path}/README.md`);
-                if (!response.ok) throw new Error('Failed to load');
-                let content = await response.text();
-                
-                content = content.replace(/^#+\s/gm, '')
-                    .replace(/\*\*/g, '')
-                    .replace(/`([^`]+)`/g, '<code>$1</code>')
-                    .replace(/\n\n/g, '</p><p>')
-                    .replace(/^- /gm, '• ')
-                    .replace(/^\d+\. /gm, '• ')
-                    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-                
-                content = '<p>' + content + '</p>';
-                
-                document.getElementById('content').innerHTML = content;
-            } catch (error) {
-                document.getElementById('content').innerHTML = '<div class="loading">内容加载失败，请检查文件路径或稍后重试</div>';
+            // 加载所有问题文件
+            let loadedCount = 0;
+            const failedQuestions = [];
+
+            for (let i = 1; i <= chapter.count; i++) {
+                try {
+                    const filename = `${chapterId}-${i}.md`;
+                    const response = await fetch(`${chapter.path}/${filename}`);
+                    
+                    if (!response.ok) throw new Error('Not found');
+                    let content = await response.text();
+                    
+                    // 提取标题
+                    const titleMatch = content.match(/^#+\s*(.+)$/m);
+                    const title = titleMatch ? titleMatch[1].trim() : `问题 ${i}`;
+                    
+                    // 渲染 Markdown 内容
+                    content = renderMarkdown(content);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'question-card';
+                    card.innerHTML = `
+                        <div class="question-header" onclick="toggleQuestion(this)">
+                            <span class="question-number">${chapterId}-${i}</span>
+                            <span class="question-title">${title}</span>
+                            <span class="question-toggle">▼</span>
+                        </div>
+                        <div class="question-content">${content}</div>
+                    `;
+                    
+                    contentDiv.appendChild(card);
+                    loadedCount++;
+                } catch (error) {
+                    failedQuestions.push(i);
+                }
             }
+
+            if (loadedCount === 0) {
+                contentDiv.innerHTML = '<div class="loading">内容加载失败，请检查文件路径或稍后重试</div>';
+            }
+        }
+
+        function renderMarkdown(text) {
+            return text
+                .replace(/^#+\s+(.+)$/gm, '<h3>$1</h3>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\`([^\`]+)\`/g, '<code>$1</code>')
+                .replace(/\r\n/g, '\n')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>')
+                .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+                .replace(/^- (.+)$/gm, '<li>$1</li>')
+                .replace(/\d+\. (.+)$/gm, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+        }
+
+        function toggleQuestion(header) {
+            const card = header.parentElement;
+            card.classList.toggle('expanded');
         }
 
         window.onload = loadChapter;
