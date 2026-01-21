@@ -1,7 +1,7 @@
 # 全网首发！！！最全的网安面试题附参考答案（涵盖护网、红队、逆向、密码学、二进制、AI、区块链）
 
 GitHub 地址：https://github.com/duckpigdog/Sec-Interview
-
+在线预览：https://fupsec.github.io/Sec-Interview/
 上万道安全面试题已经全部为您划分好，适用于网络安全所有岗位！！！
 
 HR：请问…………
