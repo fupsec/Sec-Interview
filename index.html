@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网络安全面试题库 - 全网最全</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --text-primary: #ffffff;
+            --text-secondary: #8b8b9e;
+            --accent-primary: #00ff9d;
+            --accent-secondary: #00d4ff;
+            --accent-gradient: linear-gradient(135deg, #00ff9d 0%, #00d4ff 100%);
+            --border-color: rgba(0, 255, 157, 0.1);
+            --shadow-glow: 0 0 30px rgba(0, 255, 157, 0.15);
+        }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image: radial-gradient(ellipse at 20% 20%, rgba(0, 255, 157, 0.05) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(0, 212, 255, 0.05) 0%, transparent 50%);
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        header {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+        }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .logo .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            -webkit-text-fill-color: var(--text-secondary);
+        }
+        .github-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .github-link:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+        .hero { padding: 6rem 0 4rem; text-align: center; }
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        .hero h1 .highlight {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+        .stat-item { text-align: center; }
+        .stat-item .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-item .label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+        .chapters-section { padding: 4rem 0 6rem; }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 2rem;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+        }
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .chapter-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+        .chapter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        .chapter-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-4px);
+        }
+        .chapter-card:hover::before { transform: scaleX(1); }
+        .chapter-card .chapter-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+        .chapter-card .chapter-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .chapter-card .chapter-count {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        footer { padding: 3rem 0; border-top: 1px solid var(--border-color); text-align: center; }
+        footer p { color: var(--text-secondary); font-size: 0.875rem; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .hero-stats { gap: 2rem; }
+            .chapters-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div>Sec-Interview</div>
+                <div class="subtitle">网络安全面试题库</div>
+            </div>
+            <a href="https://github.com/duckpigdog/Sec-Interview" class="github-link" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+        </div>
+    </header>
+    <main class="container">
+        <section class="hero">
+            <h1>全网最全 <span class="highlight">网络安全面试题库</span></h1>
+            <p>涵盖护网、红队、逆向、密码学、二进制、AI、区块链等上万道安全面试题，适用于网络安全所有岗位</p>
+            <div class="hero-stats">
+                <div class="stat-item"><div class="number">31</div><div class="label">知识章节</div></div>
+                <div class="stat-item"><div class="number">400+</div><div class="label">面试题目</div></div>
+                <div class="stat-item"><div class="number">100%</div><div class="label">免费开放</div></div>
+            </div>
+        </section>
+        <section class="chapters-section">
+            <h2 class="section-title">全部章节</h2>
+            <div class="chapters-grid">
+                <a href="chapter.html?id=1" class="chapter-card"><div class="chapter-number">CHAPTER 01</div><div class="chapter-title">信息收集</div><div class="chapter-count">32 道题目</div></a>
+                <a href="chapter.html?id=2" class="chapter-card"><div class="chapter-number">CHAPTER 02</div><div class="chapter-title">XSS 跨站脚本</div><div class="chapter-count">13 道题目</div></a>
+                <a href="chapter.html?id=3" class="chapter-card"><div class="chapter-number">CHAPTER 03</div><div class="chapter-title">CSRF 跨站请求伪造</div><div class="chapter-count">3 道题目</div></a>
+                <a href="chapter.html?id=4" class="chapter-card"><div class="chapter-number">CHAPTER 04</div><div class="chapter-title">SQL 注入</div><div class="chapter-count">20 道题目</div></a>
+                <a href="chapter.html?id=5" class="chapter-card"><div class="chapter-number">CHAPTER 05</div><div class="chapter-title">文件上传漏洞</div><div class="chapter-count">14 道题目</div></a>
+                <a href="chapter.html?id=6" class="chapter-card"><div class="chapter-number">CHAPTER 06</div><div class="chapter-title">文件包含漏洞</div><div class="chapter-count">8 道题目</div></a>
+                <a href="chapter.html?id=7" class="chapter-card"><div class="chapter-number">CHAPTER 07</div><div class="chapter-title">SSRF 服务端请求伪造</div><div class="chapter-count">12 道题目</div></a>
+                <a href="chapter.html?id=8" class="chapter-card"><div class="chapter-number">CHAPTER 08</div><div class="chapter-title">XXE 外部实体注入</div><div class="chapter-count">8 道题目</div></a>
+                <a href="chapter.html?id=9" class="chapter-card"><div class="chapter-number">CHAPTER 09</div><div class="chapter-title">命令执行</div><div class="chapter-count">12 道题目</div></a>
+                <a href="chapter.html?id=10" class="chapter-card"><div class="chapter-number">CHAPTER 10</div><div class="chapter-title">权限维持</div><div class="chapter-count">11 道题目</div></a>
+                <a href="chapter.html?id=11" class="chapter-card"><div class="chapter-number">CHAPTER 11</div><div class="chapter-title">横向移动</div><div class="chapter-count">13 道题目</div></a>
+                <a href="chapter.html?id=12" class="chapter-card"><div class="chapter-number">CHAPTER 12</div><div class="chapter-title">权限提升</div><div class="chapter-count">13 道题目</div></a>
+                <a href="chapter.html?id=13" class="chapter-card"><div class="chapter-number">CHAPTER 13</div><div class="chapter-title">内网渗透</div><div class="chapter-count">15 道题目</div></a>
+                <a href="chapter.html?id=14" class="chapter-card"><div class="chapter-number">CHAPTER 14</div><div class="chapter-title">提权实战</div><div class="chapter-count">13 道题目</div></a>
+                <a href="chapter.html?id=15" class="chapter-card"><div class="chapter-number">CHAPTER 15</div><div class="chapter-title">后渗透</div><div class="chapter-count">13 道题目</div></a>
+                <a href="chapter.html?id=16" class="chapter-card"><div class="chapter-number">CHAPTER 16</div><div class="chapter-title">免杀技术</div><div class="chapter-count">12 道题目</div></a>
+                <a href="chapter.html?id=17" class="chapter-card"><div class="chapter-number">CHAPTER 17</div><div class="chapter-title">Webshell</div><div class="chapter-count">13 道题目</div></a>
+                <a href="chapter.html?id=18" class="chapter-card"><div class="chapter-number">CHAPTER 18</div><div class="chapter-title">应急响应</div><div class="chapter-count">13 道题目</div></a>
+                <a href="chapter.html?id=19" class="chapter-card"><div class="chapter-number">CHAPTER 19</div><div class="chapter-title">APT 攻击</div><div class="chapter-count">10 道题目</div></a>
+                <a href="chapter.html?id=20" class="chapter-card"><div class="chapter-number">CHAPTER 20</div><div class="chapter-title">数据恢复</div><div class="chapter-count">10 道题目</div></a>
+                <a href="chapter.html?id=21" class="chapter-card"><div class="chapter-number">CHAPTER 21</div><div class="chapter-title">社会工程学</div><div class="chapter-count">9 道题目</div></a>
+                <a href="chapter.html?id=22" class="chapter-card"><div class="chapter-number">CHAPTER 22</div><div class="chapter-title">流量分析</div><div class="chapter-count">10 道题目</div></a>
+                <a href="chapter.html?id=23" class="chapter-card"><div class="chapter-number">CHAPTER 23</div><div class="chapter-title">逆向工程</div><div class="chapter-count">24 道题目</div></a>
+                <a href="chapter.html?id=24" class="chapter-card"><div class="chapter-number">CHAPTER 24</div><div class="chapter-title">痕迹清除</div><div class="chapter-count">2 道题目</div></a>
+                <a href="chapter.html?id=25" class="chapter-card"><div class="chapter-number">CHAPTER 25</div><div class="chapter-title">钓鱼社工</div><div class="chapter-count">3 道题目</div></a>
+                <a href="chapter.html?id=26" class="chapter-card"><div class="chapter-number">CHAPTER 26</div><div class="chapter-title">二进制</div><div class="chapter-count">19 道题目</div></a>
+                <a href="chapter.html?id=27" class="chapter-card"><div class="chapter-number">CHAPTER 27</div><div class="chapter-title">AI 安全</div><div class="chapter-count">11 道题目</div></a>
+                <a href="chapter.html?id=28" class="chapter-card"><div class="chapter-number">CHAPTER 28</div><div class="chapter-title">密码学安全</div><div class="chapter-count">6 道题目</div></a>
+                <a href="chapter.html?id=29" class="chapter-card"><div class="chapter-number">CHAPTER 29</div><div class="chapter-title">区块链安全</div><div class="chapter-count">8 道题目</div></a>
+                <a href="chapter.html?id=30" class="chapter-card"><div class="chapter-number">CHAPTER 30</div><div class="chapter-title">云安全</div><div class="chapter-count">1 道题目</div></a>
+                <a href="chapter.html?id=31" class="chapter-card"><div class="chapter-number">CHAPTER 31</div><div class="chapter-title">APP 安全</div><div class="chapter-count">2 道题目</div></a>
+            </div>
+        </section>
+    </main>
+    <footer><div class="container"><p>© 2024 Sec-Interview. 持续更新中 · 欢迎投稿</p></div></footer>
+</body>
+</html>
