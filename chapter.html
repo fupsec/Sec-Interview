@@ -148,6 +148,10 @@
             border-radius: 4px;
             font-size: 0.875rem;
         }
+        .question-content pre code {
+            background: none;
+            padding: 0;
+        }
         .question-content p {
             margin-bottom: 1rem;
         }
@@ -157,6 +161,19 @@
         }
         .question-content li {
             margin-bottom: 0.5rem;
+        }
+        .question-content strong {
+            color: var(--accent-primary);
+        }
+        .question-content h3, .question-content h4 {
+            margin: 1.5rem 0 0.75rem;
+            color: var(--accent-primary);
+        }
+        .question-content h3 {
+            font-size: 1.25rem;
+        }
+        .question-content h4 {
+            font-size: 1.1rem;
         }
         .loading {
             text-align: center;
@@ -221,6 +238,13 @@
             31: { title: 'APP 安全', path: 'Chapter31', count: 2 }
         };
 
+        // HTML 转义函数，防止 XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         async function loadChapter() {
             const urlParams = new URLSearchParams(window.location.search);
             const chapterId = urlParams.get('id');
@@ -239,7 +263,6 @@
 
             // 加载所有问题文件
             let loadedCount = 0;
-            const failedQuestions = [];
 
             for (let i = 1; i <= chapter.count; i++) {
                 try {
@@ -247,30 +270,50 @@
                     const response = await fetch(`${chapter.path}/${filename}`);
                     
                     if (!response.ok) throw new Error('Not found');
-                    let content = await response.text();
+                    const rawContent = await response.text();
                     
                     // 提取标题
-                    const titleMatch = content.match(/^#+\s*(.+)$/m);
-                    const title = titleMatch ? titleMatch[1].trim() : `问题 ${i}`;
+                    const titleMatch = rawContent.match(/^#+\s*(.+)$/m);
+                    const title = titleMatch ? escapeHtml(titleMatch[1].trim()) : `问题 ${i}`;
                     
-                    // 渲染 Markdown 内容
-                    content = renderMarkdown(content);
+                    // 安全地渲染 Markdown 内容
+                    const content = renderMarkdown(rawContent);
                     
                     const card = document.createElement('div');
                     card.className = 'question-card';
-                    card.innerHTML = `
-                        <div class="question-header" onclick="toggleQuestion(this)">
-                            <span class="question-number">${chapterId}-${i}</span>
-                            <span class="question-title">${title}</span>
-                            <span class="question-toggle">▼</span>
-                        </div>
-                        <div class="question-content">${content}</div>
-                    `;
+                    
+                    // 使用文本节点创建标题，防止 XSS
+                    const headerDiv = document.createElement('div');
+                    headerDiv.className = 'question-header';
+                    headerDiv.onclick = function() { toggleQuestion(this); };
+                    
+                    const numberSpan = document.createElement('span');
+                    numberSpan.className = 'question-number';
+                    numberSpan.textContent = `${chapterId}-${i}`;
+                    
+                    const titleSpan = document.createElement('span');
+                    titleSpan.className = 'question-title';
+                    titleSpan.textContent = titleMatch ? titleMatch[1].trim() : `问题 ${i}`;
+                    
+                    const toggleSpan = document.createElement('span');
+                    toggleSpan.className = 'question-toggle';
+                    toggleSpan.textContent = '▼';
+                    
+                    headerDiv.appendChild(numberSpan);
+                    headerDiv.appendChild(titleSpan);
+                    headerDiv.appendChild(toggleSpan);
+                    
+                    const contentDiv2 = document.createElement('div');
+                    contentDiv2.className = 'question-content';
+                    contentDiv2.innerHTML = content;
+                    
+                    card.appendChild(headerDiv);
+                    card.appendChild(contentDiv2);
                     
                     contentDiv.appendChild(card);
                     loadedCount++;
                 } catch (error) {
-                    failedQuestions.push(i);
+                    // 跳过不存在的文件
                 }
             }
 
@@ -280,17 +323,45 @@
         }
 
         function renderMarkdown(text) {
-            return text
-                .replace(/^#+\s+(.+)$/gm, '<h3>$1</h3>')
+            // 先提取代码块并替换为占位符
+            const codeBlocks = [];
+            let codeIndex = 0;
+            
+            // 替换代码块
+            let processed = text.replace(/```([\s\S]*?)```/g, function(match, code) {
+                codeBlocks.push(code);
+                return `___CODEBLOCK_${codeIndex}___`;
+            });
+            
+            // 转义 HTML 防止 XSS
+            const div = document.createElement('div');
+            div.textContent = processed;
+            processed = div.innerHTML;
+            
+            // 渲染 Markdown 语法（代码块除外）
+            processed = processed
+                .replace(/^###\s+(.+)$/gm, '<h3>$1</h3>')
+                .replace(/^##\s+(.+)$/gm, '<h3>$1</h3>')
+                .replace(/^#\s+(.+)$/gm, '<h3>$1</h3>')
                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\`([^\`]+)\`/g, '<code>$1</code>')
                 .replace(/\r\n/g, '\n')
                 .replace(/\n\n/g, '</p><p>')
                 .replace(/\n/g, '<br>')
-                .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
                 .replace(/^- (.+)$/gm, '<li>$1</li>')
-                .replace(/\d+\. (.+)$/gm, '<li>$1</li>')
-                .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+                .replace(/\d+\. (.+)$/gm, '<li>$1</li>');
+            
+            // 处理列表
+            processed = processed.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            
+            // 恢复代码块并安全渲染
+            processed = processed.replace(/___CODEBLOCK_(\d+)___/g, function(match, index) {
+                const code = codeBlocks[index];
+                const escapedCode = escapeHtml(code);
+                return `<pre><code>${escapedCode}</code></pre>`;
+            });
+            
+            return processed;
         }
 
         function toggleQuestion(header) {
